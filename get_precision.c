@@ -1,41 +1,22 @@
 #include "main.h"
 
 /**
- * get_precision - Calculates the precision for printing
- * @format: Formatted string in which to print the arguments
- * @i: List of arguments to be printed.
- * @list: list of arguments.
- *
- * Return: Precision.
+ * parser - Receives the main string and all the necessary parameters to
+ * print a formated string.
+ * @format: A string containing all the desired characters.
+ * @f_list: A list of all the posible functions.
+ * @arg_list: A list containing all the argumentents passed to the program.
+ * Return: A total count of the characters printed.
  */
-int get_precision(const char *format, int *i, va_list list)
+int parser(const char *format, conver_t f_list[], va_list arg_list)
 {
-	int curr_i = *i + 1;
-	int precision = -1;
+	int i, j, r_val, printed_chars;
 
-	if (format[curr_i] != '.')
-		return (precision);
-
-	precision = 0;
-
-	for (curr_i += 1; format[curr_i] != '\0'; curr_i++)
+	printed_chars = 0;
+	for (i = 0; format[i] != '\0'; i++)/* Iterates through the main str*/
 	{
-		if (is_digit(format[curr_i]))
+		if (format[i] == '%') /*Checks for format specifiers*/
 		{
-			precision *= 10;
-			precision += format[curr_i] - '0';
-		}
-		else if (format[curr_i] == '*')
-		{
-			curr_i++;
-			precision = va_arg(list, int);
-			break;
-		}
-		else
-			break;
-	}
-
-	*i = curr_i - 1;
-
-	return (precision);
-}
+			/*Iterates through struct to find the right func*/
+			for (j = 0; f_list[j].sym != NULL; j++)
+			{
